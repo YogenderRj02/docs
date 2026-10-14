@@ -163,23 +163,29 @@ async function doSetup(){
 }
 
 auth.onAuthStateChanged(u=>{
-  unsubs.forEach(f=>f());unsubs=[];started=false;me=null;sel.clear();
+  unsubs.forEach(f=>f());unsubs=[];started=false;me=null;sel.clear();clearTimeout(window._np);
   if(!u){show('login');return}
   unsubs.push(db.collection('users').doc(u.uid).onSnapshot(s=>{
-    if(!s.exists)return;
+    if(!s.exists){ // profile abhi nahi mila: thoda ruko (naya admin/user ban raha ho sakta hai), phir saaf message do
+      clearTimeout(window._np);
+      window._np=setTimeout(()=>{if(!me){$('le').textContent='Is login ka profile Firestore me nahi mila. Firebase Console > Firestore > users me is user ka document banao (neeche wali guide dekho)';auth.signOut()}},4000);
+      return;
+    }
+    clearTimeout(window._np);
     me={id:s.id,...s.data()};
-    if(!me.active){toast('Aapka access band kar diya gaya hai');auth.signOut();return}
+    if(me.active!==true){$('le').textContent='Is login ka access band hai ya profile me active=true nahi hai';me=null;auth.signOut();return}
     if(!started){started=true;startApp()}
     render();
-  }));
+  },e=>{$('le').textContent='Firestore se profile nahi padh paaye: '+e.message+' (Firestore rules publish kiye?)';auth.signOut()}));
 });
 
+function _snap(q,cb){return q.onSnapshot(cb,e=>toast('Data nahi padh paaye: '+e.message,6000))}
 function startApp(){
   show('app');
-  unsubs.push(db.collection('members').orderBy('name').onSnapshot(s=>{members=s.docs.map(d=>({id:d.id,...d.data()}));if(!members.find(m=>m.id===cm)){cm=members[0]?.id||null;cf=null}render()}));
-  unsubs.push(db.collection('folders').orderBy('createdAt').onSnapshot(s=>{folders=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
-  unsubs.push(db.collection('docs').orderBy('createdAt','desc').onSnapshot(s=>{docs=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
-  unsubs.push(db.collection('users').onSnapshot(s=>{users=s.docs.map(d=>({id:d.id,...d.data()}));}));
+  unsubs.push(_snap(db.collection('members').orderBy('name'),s=>{members=s.docs.map(d=>({id:d.id,...d.data()}));if(!members.find(m=>m.id===cm)){cm=members[0]?.id||null;cf=null}render()}));
+  unsubs.push(_snap(db.collection('folders').orderBy('createdAt'),s=>{folders=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
+  unsubs.push(_snap(db.collection('docs').orderBy('createdAt','desc'),s=>{docs=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
+  unsubs.push(_snap(db.collection('users'),s=>{users=s.docs.map(d=>({id:d.id,...d.data()}));}));
 }
 
 // ---- helpers for cards ----
