@@ -487,7 +487,7 @@ async function newUser(){
 
 // ---- PWA (mobile par app jaisa install) ----
 let dip=null;
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;$('inst').classList.remove('hide')});
+window.addEventListener('beforeinstallprompt',e=>{dip=e;$('inst').classList.remove('hide')});
 window.addEventListener('appinstalled',()=>$('inst').classList.add('hide'));
 if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!navigator.standalone)$('inst').classList.remove('hide');
 async function installApp(){
