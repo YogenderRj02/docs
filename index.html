@@ -114,7 +114,7 @@ const CFG={
   appId:"1:9414978030:web:89c3330c8abc76734906ff"
 };
 // ====== APPS SCRIPT KA /exec LINK YAHAN DAALO (https://script.google.com/macros/s/.../exec) ======
-const DRIVE_URL="PASTE_APPS_SCRIPT_URL_HERE";
+const DRIVE_URL="https://script.google.com/macros/s/AKfycbwxYPKvNpNU8mp_oppfRBQDBa8Vz5fLwrO3pHQX6RTlY8s46m-QK6KHhOWGilPsjsb4/exec";
 // ==================================================================================================
 const app=firebase.initializeApp(CFG), app2=firebase.initializeApp(CFG,'sec');
 const auth=firebase.auth(),db=firebase.firestore();
@@ -184,7 +184,7 @@ auth.onAuthStateChanged(u=>{
       return;
     }
     clearTimeout(window._np);
-    me={id:s.id,...s.data()};
+    me={id:s.id,...s.data()};me.name=me.name||me.username||(u.email||'').split('@')[0]||'User';
     if(me.active!==true){$('le').textContent='Is login ka access band hai ya profile me active=true nahi hai';me=null;auth.signOut();return}
     if(!started){started=true;startApp()}
     render();
@@ -334,7 +334,7 @@ async function put(file,name,memberId,folderId,folderName,expiry){
   if(blob.size>12*1048576)throw new Error('File 12 MB se badi hai');
   const mime=blob.type||file.type||'application/octet-stream';
   const r=await api('upload',{memberName:m.name,folderName:folderName||fo.name,name,mime,data:await b64(blob)});
-  await db.collection('docs').add({memberId,folderId,name,driveId:r.id,mime,size:blob.size,expiry:expiry||null,by:me.name,createdAt:Date.now()});
+  await db.collection('docs').add({memberId,folderId,name,driveId:r.id,mime,size:blob.size,expiry:expiry||null,by:me.name||me.username||'User',createdAt:Date.now()});
 }
 
 // ---- upload (file / camera) ----
