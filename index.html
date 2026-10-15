@@ -12,48 +12,63 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>Ghar Documents</title>
 <style>
-:root{--bg:#f4f6fb;--card:#fff;--tx:#1b2333;--mu:#667085;--pr:#4f46e5;--pr2:#eef0ff;--bd:#e4e7ee;--rd:#e5484d;--am:#b7791f;--am2:#fff4d6}
-@media(prefers-color-scheme:dark){:root{--bg:#0f131c;--card:#181e2b;--tx:#e8ecf4;--mu:#97a0b3;--pr:#818cf8;--pr2:#232a44;--bd:#262e40;--am:#f6c453;--am2:#3a2f12}}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--tx)}
-button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:9px 14px;background:var(--pr);color:#fff;font-weight:600}
+:root{--bg:#f3f5fb;--card:#fff;--tx:#1b2333;--mu:#6b7385;--pr:#4f46e5;--pr2:#eef0ff;--bd:#e4e7ee;--rd:#e5484d;--am:#b7791f;--am2:#fff4d6;--sh:0 2px 10px #1b23330d;--sh2:0 10px 28px #4f46e522}
+[data-theme=dark]{--bg:#0d1119;--card:#171d2a;--tx:#e8ecf4;--mu:#97a0b3;--pr:#8b95ff;--pr2:#242b47;--bd:#262e40;--am:#f6c453;--am2:#3a2f12;--sh:0 2px 10px #0006;--sh2:0 10px 28px #0008}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--tx);transition:background .2s}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px;padding:9px 14px;background:var(--pr);color:#fff;font-weight:600;transition:transform .12s,opacity .12s}
+button:active{transform:scale(.96)}button:hover{opacity:.9}
 button.g{background:var(--pr2);color:var(--pr)}button.d{background:transparent;color:var(--rd)}
-input,select{font:inherit;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);width:100%}
+input,select{font:inherit;padding:11px 12px;border:1px solid var(--bd);border-radius:12px;background:var(--card);color:var(--tx);width:100%;outline:0}
+input:focus,select:focus{border-color:var(--pr);box-shadow:0 0 0 3px var(--pr2)}
 label{font-size:13px;color:var(--mu);display:block;margin-bottom:4px}
 .hide{display:none!important}
-.center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.box{background:var(--card);border-radius:20px;padding:32px 26px;width:100%;max-width:370px;box-shadow:0 10px 40px #0001;display:flex;flex-direction:column;gap:12px}
-.box .ic{font-size:50px;text-align:center}.box h1{margin:0;text-align:center}.box p{color:var(--mu);text-align:center;margin:0}
-header{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:5;flex-wrap:wrap}
-header h2{margin:0;font-size:18px;flex:1;min-width:150px}header small{color:var(--mu)}
-main{max-width:1000px;margin:0 auto;padding:16px 16px 90px}
-.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
-.chip{white-space:nowrap;background:var(--card);color:var(--tx);border:1px solid var(--bd)}
-.chip.on{background:var(--pr);color:#fff;border-color:var(--pr)}
+.center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#4f46e5,#7c3aed 55%,#db2777)}
+.box{background:var(--card);border-radius:24px;padding:34px 26px;width:100%;max-width:380px;box-shadow:0 20px 60px #0004;display:flex;flex-direction:column;gap:12px}
+.box .ic{font-size:52px;text-align:center}.box h1{margin:0;text-align:center}.box p{color:var(--mu);text-align:center;margin:0}
+header{display:flex;align-items:center;gap:8px;padding:12px 16px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;position:sticky;top:0;z-index:5;flex-wrap:wrap;box-shadow:0 4px 18px #4f46e544}
+header h2{margin:0;font-size:18px;flex:1;min-width:150px}header small{opacity:.8;font-weight:400;font-size:13px}
+header button.g{background:#ffffff26;color:#fff;padding:8px 12px}
+main{max-width:1050px;margin:0 auto;padding:16px 16px 100px}
+#stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px}
+.st{background:var(--card);border-radius:16px;padding:12px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:2px;border:1px solid var(--bd)}
+.st span{font-size:20px}.st b{font-size:20px}.st small{color:var(--mu);font-size:12px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 8px}
+.chip{white-space:nowrap;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:30px;box-shadow:var(--sh)}
+.chip.on{background:var(--pr);color:#fff;border-color:var(--pr)}.chip.add{border-style:dashed;color:var(--pr)}
+#q{margin:4px 0;padding:13px 16px;border-radius:30px;box-shadow:var(--sh)}
 .bar{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap;align-items:center}.bar h3{margin:0;flex:1;min-width:140px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
-.card{position:relative;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px}
-.card .t{font-size:34px}.card b{word-break:break-word;font-size:14px;padding-right:22px}.card small{color:var(--mu)}
-.card .a{display:flex;gap:6px;margin-top:6px}.card .a button{flex:1;padding:7px}
-.ck{position:absolute;top:12px;right:12px;width:20px;height:20px;padding:0;accent-color:var(--pr)}
+.bar select{width:auto;padding:8px 10px;border-radius:30px;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;border-radius:16px}
+.grid.drop{outline:3px dashed var(--pr);outline-offset:6px;background:var(--pr2)}
+.card{position:relative;background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--sh);transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-3px);box-shadow:var(--sh2)}
+.card .t{font-size:30px;width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:var(--pr2)}
+.t.im{background:#e0f5ec}.t.pd{background:#fde8e8}.t.fo{background:#fff1d6}
+[data-theme=dark] .t.im{background:#12332a}[data-theme=dark] .t.pd{background:#3a1c1e}[data-theme=dark] .t.fo{background:#3a2f12}
+.card b{word-break:break-word;font-size:14px;padding-right:22px}.card small{color:var(--mu)}
+.card .nt{background:var(--bg);border-radius:8px;padding:4px 8px;font-size:12px}
+.card .a{display:flex;gap:5px;margin-top:6px}.card .a button{flex:1;padding:7px 0}
+.ck{position:absolute;top:14px;right:12px;width:20px;height:20px;padding:0;accent-color:var(--pr)}
+.star{position:absolute;top:60px;left:12px;background:none!important;color:#f5a623;padding:0;font-size:21px;line-height:1}
 .fold{cursor:pointer}.fold:hover{border-color:var(--pr)}
-.empty{text-align:center;color:var(--mu);padding:50px 10px;grid-column:1/-1}
+.empty{text-align:center;color:var(--mu);padding:60px 10px;grid-column:1/-1;font-size:15px}
 .bd{display:inline-block;font-size:12px;padding:2px 8px;border-radius:20px;font-weight:600;width:fit-content}
 .bd.red{background:#fde2e3;color:#b4232a}.bd.amb{background:var(--am2);color:var(--am)}
-#rem{background:var(--am2);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:14px;display:flex;flex-direction:column;gap:6px}
+#rem{background:var(--am2);border:1px solid var(--bd);border-radius:16px;padding:12px 14px;margin-bottom:14px;font-size:14px;display:flex;flex-direction:column;gap:6px}
 #rem .ri{cursor:pointer;padding:4px 0}
-#q{margin:10px 0 4px}
-.modal{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;z-index:20;padding:12px}
-.mb{background:var(--card);border-radius:16px;width:100%;max-width:820px;max-height:94vh;display:flex;flex-direction:column;overflow:auto}
+.modal{position:fixed;inset:0;background:#000a;backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:20;padding:12px}
+.mb{background:var(--card);border-radius:20px;width:100%;max-width:820px;max-height:94vh;display:flex;flex-direction:column;overflow:auto}
 .mb .h{display:flex;gap:8px;align-items:center;padding:12px;border-bottom:1px solid var(--bd);flex-wrap:wrap}
 .mb .h b{flex:1;min-width:120px;word-break:break-word}
-.pv{display:flex;align-items:center;justify-content:center;min-height:280px;background:var(--bg)}
-.pv img,.pv iframe{max-width:100%;max-height:75vh;border:0}.pv iframe{width:100%;height:75vh}
+.pv{display:flex;align-items:center;justify-content:center;min-height:280px;background:var(--bg);overflow:auto}
+.pv img,.pv iframe{max-width:100%;max-height:75vh;border:0;cursor:zoom-in}.pv img.z{max-width:none;max-height:none;width:200%;cursor:zoom-out}.pv iframe{width:100%;height:75vh;cursor:auto}
 .form{padding:18px;display:flex;flex-direction:column;gap:12px}
 .tpl{display:grid;grid-template-columns:1fr 1fr}.tpl button{padding:16px 8px}
 .row2{display:flex;gap:8px}.row2 button{flex:1}
 .row{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid var(--bd);flex-wrap:wrap}.row span{flex:1;min-width:140px}
 .err{color:var(--rd);text-align:center;font-size:14px;min-height:18px}
-#selbar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--card);border:1px solid var(--bd);box-shadow:0 8px 30px #0003;border-radius:30px;padding:8px 10px 8px 18px;display:flex;align-items:center;gap:10px;z-index:15;font-size:14px}
+#selbar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--card);border:1px solid var(--bd);box-shadow:0 8px 30px #0004;border-radius:30px;padding:8px 10px 8px 18px;display:flex;align-items:center;gap:6px;z-index:15;font-size:14px;max-width:96vw;flex-wrap:wrap;justify-content:center}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 18px;border-radius:30px;z-index:50;font-size:14px;max-width:90vw;text-align:center}
 </style>
 </head>
@@ -82,19 +97,23 @@ main{max-width:1000px;margin:0 auto;padding:16px 16px 90px}
 
 <!-- APP -->
 <div id="app" class="hide">
-  <header><span style="font-size:24px">📁</span><h2>Ghar Documents <small id="who"></small></h2>
-    <button class="g hide" id="inst" onclick="installApp()">📲 App install</button>
+  <header><span style="font-size:26px">📁</span><h2>Ghar Documents <small id="who"></small></h2>
+    <button class="g hide" id="inst" onclick="installApp()">📲 Install</button>
+    <button class="g" id="thb" onclick="setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark')">🌙</button>
     <button class="g" id="adm" onclick="adminPanel()">⚙ Admin</button>
     <button class="g" onclick="chPw()">🔑</button>
     <button class="g" onclick="auth.signOut()">Logout</button></header>
   <main>
+    <div id="stats"></div>
     <div id="rem" class="hide"></div>
     <input id="q" placeholder="🔍 Sabhi documents me naam se khojo..." oninput="render()">
     <div class="chips" id="chips"></div>
-    <div class="bar"><h3 id="ttl"></h3><span id="acts" style="display:flex;gap:8px;flex-wrap:wrap"></span></div>
+    <div class="bar"><h3 id="ttl"></h3>
+      <select id="sort" onchange="render()"><option value="new">🕒 Naye pehle</option><option value="name">🔤 Naam (A-Z)</option><option value="exp">⏰ Expiry</option></select>
+      <span id="acts" style="display:flex;gap:8px;flex-wrap:wrap"></span></div>
     <div class="grid" id="grid"></div>
   </main>
-  <div id="selbar" class="hide"><span id="selc"></span><button onclick="shareSel()">📲 WhatsApp</button><button class="g" onclick="clearSel()">✕</button></div>
+  <div id="selbar" class="hide"><span id="selc"></span><button class="g" onclick="selAll()">Sab</button><button onclick="shareSel()">📲</button><button class="g" onclick="bulkDl()">⬇</button><button class="d" onclick="bulkDel()">🗑</button><button class="g" onclick="clearSel()">✕</button></div>
 </div>
 
 <div id="modal" class="modal hide" onclick="if(event.target===this)closeM()"><div class="mb" id="mb"></div></div>
@@ -113,9 +132,9 @@ const CFG={
   messagingSenderId:"9414978030",
   appId:"1:9414978030:web:89c3330c8abc76734906ff"
 };
-// ====== APPS SCRIPT KA /exec LINK YAHAN DAALO (https://script.google.com/macros/s/.../exec) ======
+// ====== APPS SCRIPT KA /exec LINK ======
 const DRIVE_URL="https://script.google.com/macros/s/AKfycbwxYPKvNpNU8mp_oppfRBQDBa8Vz5fLwrO3pHQX6RTlY8s46m-QK6KHhOWGilPsjsb4/exec";
-// ==================================================================================================
+// =======================================
 const app=firebase.initializeApp(CFG), app2=firebase.initializeApp(CFG,'sec');
 const auth=firebase.auth(),db=firebase.firestore();
 const $=id=>document.getElementById(id);
@@ -125,6 +144,7 @@ const em=u=>u.trim().toLowerCase()+'@ghar-docs.app';
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const size=b=>b>1048576?(b/1048576).toFixed(1)+' MB':Math.ceil(b/1024)+' KB';
 const icon=m=>m.startsWith('image/')?'🖼️':m==='application/pdf'?'📕':'📄';
+const tc=m=>m.startsWith('image/')?'im':m==='application/pdf'?'pd':'';
 const ext=f=>{const m=f.name.match(/\.[a-z0-9]+$/i);if(m)return m[0];const t=(f.type||'').split('/')[1];return t?'.'+t.replace('jpeg','jpg'):''};
 const dayDiff=s=>Math.ceil((new Date(s+'T00:00:00')-new Date(new Date().toDateString()))/864e5);
 const TPL=[
@@ -133,8 +153,12 @@ const TPL=[
   {k:'voter',ico:'🗳️',folder:'Voter ID',slots:['Voter ID Front','Voter ID Back']},
   {k:'dl',ico:'🚗',folder:'Driving Licence',slots:['Driving Licence Front','Driving Licence Back']}
 ];
-let me=null,members=[],folders=[],docs=[],users=[],cm=null,cf=null,unsubs=[],started=false,slotF={};
+let me=null,members=[],folders=[],docs=[],users=[],cm=null,cf=null,view=null,unsubs=[],started=false,slotF={};
 const sel=new Set();
+
+// ---- theme ----
+function setTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem('th',t)}catch(e){}$('thb').textContent=t==='dark'?'☀️':'🌙'}
+(function(){let t=null;try{t=localStorage.getItem('th')}catch(e){}setTheme(t||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'))})();
 
 function show(id){['login','setup','app'].forEach(x=>$(x).classList.toggle('hide',x!==id))}
 function toast(m,ms=2800){const t=$('toast');t.textContent=m;t.classList.remove('hide');clearTimeout(t._t);if(ms)t._t=setTimeout(()=>t.classList.add('hide'),ms)}
@@ -143,7 +167,6 @@ function closeM(){$('modal').classList.add('hide');$('mb').innerHTML=''}
 const fail=e=>/invalid|wrong|not-found|credential/i.test(e.code+e.message)?'Username ya password galat hai':e.message;
 
 // ---- first-time check ----
-// Admin banane ka button tab dikhao jab abhi koi admin set up nahi hua (ya check na ho paye)
 function checkSetup(){
   db.collection('config').doc('setup').get()
     .then(s=>$('setupLink').classList.toggle('hide',s.exists))
@@ -167,7 +190,7 @@ async function doSetup(){
     await db.collection('users').doc(c.user.uid).set({name:n,username:u.toLowerCase(),role:'admin',active:true});
     await db.collection('config').doc('setup').set({done:true,at:Date.now()});
   }catch(e){
-    if(c&&c.user){try{await c.user.delete()}catch(x){}} // adhura account na bache, dobara try kar sako
+    if(c&&c.user){try{await c.user.delete()}catch(x){}}
     $('se').textContent=e.code==='auth/email-already-in-use'
       ?'Ye username pehle se bana hua hai. Login screen par isi username/password se login karo, admin banane ka option wahin aa jayega'
       :e.message+(/permission/i.test(e.message)?' (Firestore rules publish kiye?)':'');
@@ -178,7 +201,7 @@ auth.onAuthStateChanged(u=>{
   unsubs.forEach(f=>f());unsubs=[];started=false;me=null;sel.clear();clearTimeout(window._np);
   if(!u){show('login');checkSetup();return}
   unsubs.push(db.collection('users').doc(u.uid).onSnapshot(s=>{
-    if(!s.exists){ // profile abhi nahi mila: thoda ruko (naya user ban raha ho sakta hai)
+    if(!s.exists){
       clearTimeout(window._np);
       window._np=setTimeout(()=>noProfile(u),4000);
       return;
@@ -191,7 +214,6 @@ auth.onAuthStateChanged(u=>{
   },e=>{$('le').textContent='Firestore se profile nahi padh paaye: '+e.message+' (Firestore rules publish kiye?)';auth.signOut()}));
 });
 
-// Login ho gaya par Firestore me profile nahi hai
 async function noProfile(u){
   if(me)return;
   let first=false;
@@ -202,7 +224,7 @@ async function noProfile(u){
       try{
         await db.collection('users').doc(u.uid).set({name:n.trim(),username:(u.email||'').split('@')[0],role:'admin',active:true});
         await db.collection('config').doc('setup').set({done:true,at:Date.now()});
-        return; // profile mil gaya, app apne aap khul jayega
+        return;
       }catch(e){$('le').textContent='Admin banane me error: '+e.message+(/permission/i.test(e.message)?' (Firestore rules publish kiye?)':'');auth.signOut();return}
     }
   }
@@ -227,13 +249,14 @@ function expBadge(d){
   if(n<=30)return `<span class="bd amb">⏰ ${n} din baaki</span>`;
   return `<small>📅 Expiry: ${esc(d.expiry)}</small>`;
 }
+const srt=a=>{const s=$('sort').value,b=s==='name'?(x,y)=>x.name.localeCompare(y.name):s==='exp'?(x,y)=>(x.expiry||'9999')<(y.expiry||'9999')?-1:1:(x,y)=>y.createdAt-x.createdAt;return [...a].sort((x,y)=>(y.fav?1:0)-(x.fav?1:0)||b(x,y))};
 function docCard(d,showPath){
   const m=members.find(x=>x.id===d.memberId),f=folders.find(x=>x.id===d.folderId);
-  return `<div class="card"><input type="checkbox" class="ck" ${sel.has(d.id)?'checked':''} onchange="tog('${d.id}',this.checked)">
-    <div class="t">${icon(d.mime)}</div><b>${esc(d.name)}</b>
+  return `<div class="card"><input type="checkbox" class="ck" data-id="${d.id}" ${sel.has(d.id)?'checked':''} onchange="tog('${d.id}',this.checked)">
+    <div class="t ${tc(d.mime)}">${icon(d.mime)}</div><button class="star" title="Favorite" onclick="fav('${d.id}')">${d.fav?'★':'☆'}</button><b>${esc(d.name)}</b>
     ${showPath?`<small>👤 ${esc(m?m.name:'?')} / 📁 ${esc(f?f.name:'?')}</small>`:''}
-    <small>${size(d.size)} · ${new Date(d.createdAt).toLocaleDateString('hi-IN')}</small>${expBadge(d)}
-    <div class="a"><button class="g" title="Dekho" onclick="openDoc('${d.id}')">👁</button><button class="g" title="Download" onclick="dl('${d.id}')">⬇</button><button class="g" title="WhatsApp" onclick="share('${d.id}')">📲</button><button class="g" title="Badlo" onclick="editDoc('${d.id}')">✏</button></div></div>`;
+    <small>${size(d.size)} · ${new Date(d.createdAt).toLocaleDateString('hi-IN')}</small>${expBadge(d)}${d.note?`<small class="nt">📝 ${esc(d.note)}</small>`:''}
+    <div class="a"><button class="g" title="Dekho" onclick="openDoc('${d.id}')">👁</button><button class="g" title="Download" onclick="dl('${d.id}')">⬇</button><button class="g" title="WhatsApp" onclick="share('${d.id}')">📲</button><button class="g" title="Naam badlo" onclick="renameDoc('${d.id}')">🔤</button><button class="g" title="Aur options" onclick="editDoc('${d.id}')">⋯</button></div></div>`;
 }
 function reminders(){
   const el=$('rem');
@@ -245,24 +268,37 @@ function reminders(){
     return `<div class="ri" onclick="jump('${d.memberId}','${d.folderId}')">${esc(m?m.name:'')} — ${esc(d.name)} <span class="bd ${n<0?'red':'amb'}">${n<0?'expire ho gaya':n+' din baaki'}</span></div>`;
   }).join('')+(r.length>5?`<small>+${r.length-5} aur</small>`:'');
 }
-function jump(m,f){cm=m;cf=f;$('q').value='';render();window.scrollTo(0,0)}
+function stats(){
+  const ex=docs.filter(d=>d.expiry&&dayDiff(d.expiry)<=30).length,tot=docs.reduce((a,d)=>a+(d.size||0),0);
+  $('stats').innerHTML=[['📄',docs.length,'Documents'],['👨‍👩‍👧',members.length,'Members'],['⏰',ex,'Expiry alert'],['💾',size(tot),'Storage']].map(([i,n,l])=>`<div class="st"><span>${i}</span><b>${n}</b><small>${l}</small></div>`).join('');
+}
+function jump(m,f){cm=m;cf=f;view=null;$('q').value='';render();window.scrollTo(0,0)}
+function setView(v){view=view===v?null:v;$('q').value='';render()}
+async function fav(id){const d=docs.find(x=>x.id===id);await db.collection('docs').doc(id).update({fav:!d.fav})}
 
 // ---- render ----
 function render(){
   if(!me||$('app').classList.contains('hide'))return;
   $('who').textContent='· '+me.name+(me.role==='admin'?' (Admin)':'');
   $('adm').classList.toggle('hide',me.role!=='admin');
-  reminders();selBar();
-  $('chips').innerHTML=members.map(m=>`<button class="chip ${m.id===cm?'on':''}" onclick="cm='${m.id}';cf=null;$('q').value='';render()">👤 ${esc(m.name)}</button>`).join('')
-    +`<button class="chip" onclick="addMember()">＋ Member</button>`;
+  reminders();stats();selBar();
+  $('chips').innerHTML=`<button class="chip ${view==='fav'?'on':''}" onclick="setView('fav')">⭐ Favorites</button><button class="chip ${view==='exp'?'on':''}" onclick="setView('exp')">⏰ Expiry</button>`
+    +members.map(m=>`<button class="chip ${!view&&m.id===cm?'on':''}" onclick="cm='${m.id}';cf=null;view=null;$('q').value='';render()">👤 ${esc(m.name)}</button>`).join('')
+    +`<button class="chip add" onclick="addMember()">＋ Member</button>`;
   const q=$('q').value.trim().toLowerCase(),g=$('grid');
   if(q){
-    const fl=folders.filter(f=>f.name.toLowerCase().includes(q)),dls=docs.filter(d=>d.name.toLowerCase().includes(q));
+    const fl=folders.filter(f=>f.name.toLowerCase().includes(q)),dls=srt(docs.filter(d=>d.name.toLowerCase().includes(q)||(d.note||'').toLowerCase().includes(q)));
     $('ttl').textContent=`🔍 "${$('q').value.trim()}" — ${fl.length+dls.length} mile`;
     $('acts').innerHTML=`<button class="g" onclick="$('q').value='';render()">✕ Search band</button>`;
     g.innerHTML=fl.map(f=>{const m=members.find(x=>x.id===f.memberId);
-      return `<div class="card fold" onclick="jump('${f.memberId}','${f.id}')"><div class="t">📁</div><b>${esc(f.name)}</b><small>👤 ${esc(m?m.name:'?')}</small></div>`}).join('')
-      +dls.map(d=>docCard(d,true)).join('')||'<div class="empty">Kuch nahi mila</div>';
+      return `<div class="card fold" onclick="jump('${f.memberId}','${f.id}')"><div class="t fo">📁</div><b>${esc(f.name)}</b><small>👤 ${esc(m?m.name:'?')}</small></div>`}).join('')
+      +dls.map(d=>docCard(d,true)).join('')||'<div class="empty">🔎 Kuch nahi mila</div>';
+    return;
+  }
+  if(view){
+    const L=srt(docs.filter(d=>view==='fav'?d.fav:d.expiry&&dayDiff(d.expiry)<=30));
+    $('ttl').textContent=view==='fav'?'⭐ Favorite documents':'⏰ Expiry wale documents (30 din ya expire)';$('acts').innerHTML='';
+    g.innerHTML=L.map(d=>docCard(d,true)).join('')||`<div class="empty">${view==='fav'?'☆ Kisi file par star lagao, wo yahan dikhegi':'🎉 Koi document expire hone wala nahi'}</div>`;
     return;
   }
   const m=members.find(x=>x.id===cm);
@@ -270,26 +306,35 @@ function render(){
   const f=folders.find(x=>x.id===cf&&x.memberId===cm);
   if(!f){
     cf=null;$('ttl').textContent=m.name+' ke folders';
-    $('acts').innerHTML=`<button onclick="tplPicker()">🪪 Document add</button><button class="g" onclick="addFolder()">＋ Folder</button>`+(me.role==='admin'?`<button class="d" onclick="delMember()">🗑 Member</button>`:'');
+    $('acts').innerHTML=`<button onclick="tplPicker()">🪪 Document add</button><button class="g" onclick="addFolder()">＋ Folder</button><button class="g" onclick="renMember()">🔤 Naam</button>`+(me.role==='admin'?`<button class="d" onclick="delMember()">🗑 Member</button>`:'');
     const fl=folders.filter(x=>x.memberId===cm);
-    g.innerHTML=fl.map(x=>`<div class="card fold" onclick="cf='${x.id}';render()"><div class="t">📁</div><b>${esc(x.name)}</b><small>${docs.filter(d=>d.folderId===x.id).length} files</small></div>`).join('')
+    g.innerHTML=fl.map(x=>`<div class="card fold" onclick="cf='${x.id}';render()"><div class="t fo">📁</div><b>${esc(x.name)}</b><small>${docs.filter(d=>d.folderId===x.id).length} files</small></div>`).join('')
       ||'<div class="empty">📭 Koi folder nahi. "🪪 Document add" ya "＋ Folder" dabao</div>';
   }else{
     $('ttl').innerHTML=`<a href="#" onclick="cf=null;render();return false" style="color:var(--pr);text-decoration:none">← ${esc(m.name)}</a> / ${esc(f.name)}`;
-    $('acts').innerHTML=`<button onclick="upFile(false)">⬆ Upload</button><button class="g" onclick="upFile(true)">📷 Camera</button><button class="d" onclick="delFolder()">🗑 Folder</button>`;
-    const dls=docs.filter(d=>d.folderId===cf);
-    g.innerHTML=dls.map(d=>docCard(d,false)).join('')||'<div class="empty">Is folder me abhi koi file nahi</div>';
+    $('acts').innerHTML=`<button onclick="upFile(false)">⬆ Upload</button><button class="g" onclick="upFile(true)">📷 Camera</button><button class="g" onclick="renFolder()">🔤 Naam</button><button class="d" onclick="delFolder()">🗑 Folder</button>`;
+    const dls=srt(docs.filter(d=>d.folderId===cf));
+    g.innerHTML=dls.map(d=>docCard(d,false)).join('')||'<div class="empty">📂 Is folder me abhi koi file nahi<br><small>Upload dabao ya files yahan drag karke chhodo</small></div>';
   }
 }
 
 // ---- members / folders ----
 async function addMember(){
   const n=prompt('Member ka naam (jaise: Hardik):');if(!n||!n.trim())return;
-  const r=await db.collection('members').add({name:n.trim(),createdAt:Date.now()});cm=r.id;cf=null;
+  const r=await db.collection('members').add({name:n.trim(),createdAt:Date.now()});cm=r.id;cf=null;view=null;
 }
 async function addFolder(){
   const n=prompt('Folder ka naam (jaise: Marksheet, Insurance):');if(!n||!n.trim())return;
   const r=await db.collection('folders').add({memberId:cm,name:n.trim(),createdAt:Date.now()});cf=r.id;render();
+}
+// Note: rename sirf app me naam badalta hai; purani files Drive me purane folder me hi rehti hain (app me sab sahi dikhta hai)
+async function renFolder(){
+  const f=folders.find(x=>x.id===cf),n=prompt('Folder ka naya naam:',f.name);if(!n||!n.trim()||n.trim()===f.name)return;
+  try{await db.collection('folders').doc(cf).update({name:n.trim()});toast('Folder ka naam badal gaya ✅')}catch(e){toast(e.message)}
+}
+async function renMember(){
+  const m=members.find(x=>x.id===cm),n=prompt('Member ka naya naam:',m.name);if(!n||!n.trim()||n.trim()===m.name)return;
+  try{await db.collection('members').doc(cm).update({name:n.trim()});toast('Member ka naam badal gaya ✅')}catch(e){toast(e.message)}
 }
 async function removeFiles(list){for(const d of list){try{await api('delete',{id:d.driveId})}catch(e){}await db.collection('docs').doc(d.id).delete()}}
 async function delFolder(){
@@ -321,7 +366,7 @@ async function api(action,p={}){
   return j;
 }
 const b64=blob=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(blob)});
-async function shrink(f){ // badi photo ko chhota karo (tez upload)
+async function shrink(f){
   if(!f.type.startsWith('image/')||f.size<1500000)return f;
   try{const im=await createImageBitmap(f),k=Math.min(1,2000/Math.max(im.width,im.height));
     const c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);
@@ -337,23 +382,27 @@ async function put(file,name,memberId,folderId,folderName,expiry){
   await db.collection('docs').add({memberId,folderId,name,driveId:r.id,mime,size:blob.size,expiry:expiry||null,by:me.name||me.username||'User',createdAt:Date.now()});
 }
 
-// ---- upload (file / camera) ----
+// ---- upload (file / camera / drag & drop) ----
+async function upList(files,cam){
+  try{
+    for(const f of files){
+      let nm=f.name;
+      if(cam){const b=prompt('Is photo ka naam likho:','Photo');nm=(b&&b.trim()?b.trim():'Photo')+ext(f)}
+      toast('Upload ho raha hai: '+nm,0);await put(f,nm,cm,cf);
+    }
+    toast('Upload ho gaya ✅');
+  }catch(e){toast(e.message)}
+}
 function upFile(cam){
   const i=document.createElement('input');i.type='file';
   if(cam){i.accept='image/*';i.capture='environment'}else i.multiple=true;
-  i.onchange=async()=>{
-    if(!i.files.length)return;
-    try{
-      for(const f of i.files){
-        let nm=f.name;
-        if(cam){const b=prompt('Is photo ka naam likho:','Photo');nm=(b&&b.trim()?b.trim():'Photo')+ext(f)}
-        toast('Upload ho raha hai: '+nm,0);await put(f,nm,cm,cf);
-      }
-      toast('Upload ho gaya ✅');
-    }catch(e){toast(e.message)}
-  };
+  i.onchange=()=>{if(i.files.length)upList([...i.files],cam)};
   i.click();
 }
+const mn=document.querySelector('main'),canDrop=()=>cf&&!view&&!$('q').value.trim();
+['dragover','dragenter'].forEach(ev=>mn.addEventListener(ev,e=>{if(canDrop()){e.preventDefault();$('grid').classList.add('drop')}}));
+mn.addEventListener('dragleave',e=>{if(e.target===mn||e.target===$('grid'))$('grid').classList.remove('drop')});
+mn.addEventListener('drop',e=>{$('grid').classList.remove('drop');if(canDrop()&&e.dataTransfer.files.length){e.preventDefault();upList([...e.dataTransfer.files],false)}});
 
 // ---- document templates (Aadhar, PAN, Voter, DL) ----
 function tplPicker(){
@@ -387,14 +436,22 @@ async function saveTpl(k){
   }catch(e){toast(e.message)}
 }
 
-// ---- edit: rename / move / expiry / delete ----
+// ---- rename / edit / move / delete ----
+async function renameDoc(id){
+  const d=docs.find(x=>x.id===id),e=(d.name.match(/\.[a-z0-9]+$/i)||[''])[0],b=d.name.slice(0,d.name.length-e.length);
+  const n=prompt('Document ka naya naam:',b);if(!n||!n.trim()||n.trim()===b)return;
+  const nn=/\.[a-z0-9]{2,5}$/i.test(n.trim())?n.trim():n.trim()+e;
+  try{toast('Naam badal raha hai...',0);await api('rename',{id:d.driveId,name:nn});await db.collection('docs').doc(id).update({name:nn});toast('Naam badal gaya ✅')}
+  catch(x){toast(x.message)}
+}
 function editDoc(id){
   const d=docs.find(x=>x.id===id);window._ef=d.folderId;
-  modal(`<div class="h"><b>✏ Document badlo</b><button class="g" onclick="closeM()">✕</button></div><div class="form">
+  modal(`<div class="h"><b>⋯ Document ki details</b><button class="g" onclick="closeM()">✕</button></div><div class="form">
   <div><label>Naam</label><input id="ed_n" value="${esc(d.name)}"></div>
   <div><label>Member</label><select id="ed_m" onchange="fillFol()">${members.map(m=>`<option value="${m.id}" ${m.id===d.memberId?'selected':''}>${esc(m.name)}</option>`).join('')}</select></div>
   <div><label>Folder (yahan move karo)</label><select id="ed_f"></select></div>
   <div><label>Expiry date (optional)</label><input type="date" id="ed_x" value="${esc(d.expiry||'')}"></div>
+  <div><label>Note (optional, jaise: number, jagah, kisne rakha)</label><input id="ed_t" value="${esc(d.note||'')}" maxlength="120"></div>
   <div class="err" id="ee"></div>
   <button onclick="saveEdit('${id}')">Save karo</button>
   <button class="d" onclick="delDoc('${id}')">🗑 Ye file delete karo</button></div>`);
@@ -405,14 +462,14 @@ function fillFol(){
   $('ed_f').innerHTML=folders.filter(f=>f.memberId===mid).map(f=>`<option value="${f.id}" ${f.id===cur?'selected':''}>${esc(f.name)}</option>`).join('')||'<option value="">(is member me koi folder nahi)</option>';
 }
 async function saveEdit(id){
-  const d=docs.find(x=>x.id===id),name=$('ed_n').value.trim(),mid=$('ed_m').value,fid=$('ed_f').value,ex=$('ed_x').value||null;
+  const d=docs.find(x=>x.id===id),name=$('ed_n').value.trim(),mid=$('ed_m').value,fid=$('ed_f').value,ex=$('ed_x').value||null,note=$('ed_t').value.trim();
   if(!name){$('ee').textContent='Naam khali nahi ho sakta';return}
   if(!fid){$('ee').textContent='Is member me folder nahi hai, pehle folder banao';return}
   try{
     toast('Save ho raha hai...',0);
     if(name!==d.name)await api('rename',{id:d.driveId,name});
     if(fid!==d.folderId){const m=members.find(x=>x.id===mid),f=folders.find(x=>x.id===fid);await api('move',{id:d.driveId,memberName:m.name,folderName:f.name})}
-    await db.collection('docs').doc(id).update({name,memberId:mid,folderId:fid,expiry:ex});
+    await db.collection('docs').doc(id).update({name,memberId:mid,folderId:fid,expiry:ex,note});
     closeM();toast('Save ho gaya ✅');
   }catch(e){$('ee').textContent=e.message;toast(e.message)}
 }
@@ -433,10 +490,10 @@ async function openDoc(id){
   const d=docs.find(x=>x.id===id);
   modal(`<div class="h"><b>${esc(d.name)}</b><button onclick="share('${id}')">📲 WhatsApp</button><button class="g" onclick="dl('${id}')">⬇ Download</button><button class="g" onclick="closeM()">✕</button></div>
   <div class="pv" id="pv">Drive se load ho raha hai...</div>
-  <div style="padding:10px;color:var(--mu);font-size:13px">Upload: ${esc(d.by||'')} · ${size(d.size)}${d.expiry?' · Expiry: '+esc(d.expiry):''}</div>`);
+  <div style="padding:10px;color:var(--mu);font-size:13px">Upload: ${esc(d.by||'')} · ${size(d.size)}${d.expiry?' · Expiry: '+esc(d.expiry):''}${d.note?' · 📝 '+esc(d.note):''}</div>`);
   try{
     const u=URL.createObjectURL(await fileBlob(d));
-    $('pv').innerHTML=d.mime.startsWith('image/')?`<img src="${u}">`:d.mime==='application/pdf'?`<iframe src="${u}"></iframe>`:`<div class="empty">Is file ka preview nahi ho sakta.<br>Download karke kholo.</div>`;
+    $('pv').innerHTML=d.mime.startsWith('image/')?`<img src="${u}" onclick="this.classList.toggle('z')" title="Zoom ke liye dabao">`:d.mime==='application/pdf'?`<iframe src="${u}"></iframe>`:`<div class="empty">Is file ka preview nahi ho sakta.<br>Download karke kholo.</div>`;
   }catch(e){$('pv').textContent='Error: '+e.message}
 }
 async function dl(id,quiet){
@@ -456,12 +513,19 @@ async function share(id){
   toast('File download ho gayi, WhatsApp me attach karke bhejo',5000);
 }
 
-// ---- ek saath kai files WhatsApp par ----
+// ---- multi-select: WhatsApp / download / delete ----
+const selDocs=()=>[...sel].map(id=>docs.find(x=>x.id===id)).filter(Boolean);
 function tog(id,on){on?sel.add(id):sel.delete(id);selBar()}
-function selBar(){$('selbar').classList.toggle('hide',!sel.size);$('selc').textContent=sel.size+' file chuni'}
+function selBar(){$('selbar').classList.toggle('hide',!sel.size);$('selc').textContent=sel.size+' chuni'}
 function clearSel(){sel.clear();render()}
+function selAll(){document.querySelectorAll('.ck').forEach(c=>{sel.add(c.dataset.id);c.checked=true});selBar()}
+async function bulkDl(){const ds=selDocs();for(const d of ds)await dl(d.id,true);toast(ds.length+' files download ho gayi ✅')}
+async function bulkDel(){
+  const ds=selDocs();if(!ds.length||!confirm(`${ds.length} files delete karni hain? Drive se bhi hat jayengi.`))return;
+  toast('Delete ho raha hai...',0);await removeFiles(ds);sel.clear();toast('Delete ho gayi ✅');render();
+}
 async function shareSel(){
-  const ds=[...sel].map(id=>docs.find(x=>x.id===id)).filter(Boolean);
+  const ds=selDocs();
   if(!ds.length)return;
   try{
     toast(`Taiyaar ho raha hai (${ds.length} files)...`,0);
@@ -516,7 +580,7 @@ async function newUser(){
   }catch(e){$('ne').textContent=e.code==='auth/email-already-in-use'?'Ye username pehle se hai':e.message}
 }
 
-// ---- PWA (mobile par app jaisa install) ----
+// ---- PWA ----
 let dip=null;
 window.addEventListener('beforeinstallprompt',e=>{dip=e;$('inst').classList.remove('hide')});
 window.addEventListener('appinstalled',()=>$('inst').classList.add('hide'));
