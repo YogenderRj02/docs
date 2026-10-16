@@ -70,6 +70,23 @@ main{max-width:1050px;margin:0 auto;padding:16px 16px 100px}
 .err{color:var(--rd);text-align:center;font-size:14px;min-height:18px}
 #selbar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--card);border:1px solid var(--bd);box-shadow:0 8px 30px #0004;border-radius:30px;padding:8px 10px 8px 18px;display:flex;align-items:center;gap:6px;z-index:15;font-size:14px;max-width:96vw;flex-wrap:wrap;justify-content:center}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 18px;border-radius:30px;z-index:50;font-size:14px;max-width:90vw;text-align:center}
+#prog{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);width:min(92vw,420px);background:var(--card);border:1px solid var(--bd);border-radius:18px;box-shadow:0 10px 40px #0005;padding:14px 16px;z-index:60}
+#prog .r{display:flex;justify-content:space-between;gap:10px;font-size:14px;font-weight:600}#prog .r span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#prog small{color:var(--mu);display:block;margin-top:6px}
+.pbar{height:10px;background:var(--pr2);border-radius:10px;overflow:hidden;margin-top:10px}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4f46e5,#7c3aed,#db2777);border-radius:10px;transition:width .25s}
+.pbar i.ind{width:40%!important;animation:ind 1.1s ease-in-out infinite}
+@keyframes ind{0%{margin-left:-40%}100%{margin-left:100%}}
+#topbar{height:4px;background:var(--pr2)}#topbar i{display:block;height:100%;background:linear-gradient(90deg,#4f46e5,#db2777);transition:width .3s}
+.ld{display:flex;flex-direction:column;align-items:center;gap:12px;padding:40px 20px;width:min(90%,360px);color:var(--mu)}
+.ld .pbar{width:100%}
+.sp{width:46px;height:46px;border-radius:50%;border:4px solid var(--pr2);border-top-color:var(--pr);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sk{height:150px;background:linear-gradient(90deg,var(--card) 25%,var(--pr2) 50%,var(--card) 75%);background-size:200% 100%;animation:sh 1.3s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+#drv{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px 14px;margin-bottom:14px;box-shadow:var(--sh);font-size:14px}
+#drv .r{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}#drv small{color:var(--mu)}
+#drv .pbar{margin-top:8px}#drv .pbar i.warn{background:linear-gradient(90deg,#f59e0b,#e5484d)}
 </style>
 </head>
 <body>
@@ -103,8 +120,10 @@ main{max-width:1050px;margin:0 auto;padding:16px 16px 100px}
     <button class="g" id="adm" onclick="adminPanel()">⚙ Admin</button>
     <button class="g" onclick="chPw()">🔑</button>
     <button class="g" onclick="auth.signOut()">Logout</button></header>
+  <div id="topbar" class="hide"><i id="tbi"></i></div>
   <main>
     <div id="stats"></div>
+    <div id="drv"></div>
     <div id="rem" class="hide"></div>
     <input id="q" placeholder="🔍 Sabhi documents me naam se khojo..." oninput="render()">
     <div class="chips" id="chips"></div>
@@ -118,6 +137,7 @@ main{max-width:1050px;margin:0 auto;padding:16px 16px 100px}
 
 <div id="modal" class="modal hide" onclick="if(event.target===this)closeM()"><div class="mb" id="mb"></div></div>
 <div id="toast" class="hide"></div>
+<div id="prog" class="hide"><div class="r"><span id="pt"></span><span id="pp"></span></div><div class="pbar"><i id="pb"></i></div><small id="ps"></small></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-app-compat.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-auth-compat.min.js"></script>
@@ -154,7 +174,20 @@ const TPL=[
   {k:'dl',ico:'🚗',folder:'Driving Licence',slots:['Driving Licence Front','Driving Licence Back']}
 ];
 let me=null,members=[],folders=[],docs=[],users=[],cm=null,cf=null,view=null,unsubs=[],started=false,slotF={};
-const sel=new Set();
+const sel=new Set(),ld={m:0,f:0,d:0};
+let drv=null,drvTried=false;
+const gb=b=>b>=1073741824?(b/1073741824).toFixed(2)+' GB':size(b);
+async function loadDrive(){try{const r=await api('storage');drv={used:+r.used,limit:+r.limit}}catch(e){drv={err:e.message}}drvRender()}
+function drvRender(){
+  const el=$('drv');if(!el)return;
+  if(!drv){el.innerHTML='<div class="r"><b>☁️ Google Drive</b><small>⏳ Space check ho raha hai...</small></div><div class="pbar"><i class="ind"></i></div>';return}
+  if(drv.err){el.innerHTML='<div class="r"><b>☁️ Google Drive</b><small>Space nahi dikha paaye</small></div><small>'+esc(drv.err)+' <a href="#" onclick="drv=null;loadDrive();drvRender();return false" style="color:var(--pr)">Dobara try karo</a></small>';return}
+  const {used,limit}=drv,p=limit?Math.min(100,used/limit*100):0;
+  el.innerHTML=`<div class="r"><b>☁️ Google Drive</b><span>${limit?`<b>${gb(Math.max(0,limit-used))}</b> khali · ${gb(limit)} me se`:gb(used)+' use hua'}</span></div>`
+    +(limit?`<div class="pbar"><i class="${p>90?'warn':''}" style="width:${Math.max(p,1)}%"></i></div><small>${gb(used)} use hua (${p.toFixed(1)}%)${p>90?' ⚠ Space kam bachi hai':''}</small>`:'');
+}
+function prog(title,pct,sub){$('prog').classList.remove('hide');$('pt').textContent=title;$('ps').textContent=sub||'';const b=$('pb');if(pct==null){b.classList.add('ind');b.style.width='';$('pp').textContent=''}else{b.classList.remove('ind');b.style.width=Math.min(100,pct)+'%';$('pp').textContent=Math.round(pct)+'%'}}
+function progEnd(){$('prog').classList.add('hide')}
 
 // ---- theme ----
 function setTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem('th',t)}catch(e){}$('thb').textContent=t==='dark'?'☀️':'🌙'}
@@ -198,7 +231,7 @@ async function doSetup(){
 }
 
 auth.onAuthStateChanged(u=>{
-  unsubs.forEach(f=>f());unsubs=[];started=false;me=null;sel.clear();clearTimeout(window._np);
+  unsubs.forEach(f=>f());unsubs=[];started=false;drv=null;drvTried=false;me=null;sel.clear();clearTimeout(window._np);
   if(!u){show('login');checkSetup();return}
   unsubs.push(db.collection('users').doc(u.uid).onSnapshot(s=>{
     if(!s.exists){
@@ -232,12 +265,12 @@ async function noProfile(u){
   auth.signOut();
 }
 
-function _snap(q,cb){return q.onSnapshot(cb,e=>toast('Data nahi padh paaye: '+e.message,6000))}
+function _snap(q,cb){return q.onSnapshot(cb,e=>{ld.m=ld.f=ld.d=1;toast('Data nahi padh paaye: '+e.message,6000);render()})}
 function startApp(){
-  show('app');
-  unsubs.push(_snap(db.collection('members').orderBy('name'),s=>{members=s.docs.map(d=>({id:d.id,...d.data()}));if(!members.find(m=>m.id===cm)){cm=members[0]?.id||null;cf=null}render()}));
-  unsubs.push(_snap(db.collection('folders').orderBy('createdAt'),s=>{folders=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
-  unsubs.push(_snap(db.collection('docs').orderBy('createdAt','desc'),s=>{docs=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
+  ld.m=ld.f=ld.d=0;show('app');
+  unsubs.push(_snap(db.collection('members').orderBy('name'),s=>{members=s.docs.map(d=>({id:d.id,...d.data()}));ld.m=1;if(!members.find(m=>m.id===cm)){cm=members[0]?.id||null;cf=null}render()}));
+  unsubs.push(_snap(db.collection('folders').orderBy('createdAt'),s=>{folders=s.docs.map(d=>({id:d.id,...d.data()}));ld.f=1;render()}));
+  unsubs.push(_snap(db.collection('docs').orderBy('createdAt','desc'),s=>{docs=s.docs.map(d=>({id:d.id,...d.data()}));ld.d=1;render()}));
   unsubs.push(_snap(db.collection('users'),s=>{users=s.docs.map(d=>({id:d.id,...d.data()}));}));
 }
 
@@ -281,7 +314,11 @@ function render(){
   if(!me||$('app').classList.contains('hide'))return;
   $('who').textContent='· '+me.name+(me.role==='admin'?' (Admin)':'');
   $('adm').classList.toggle('hide',me.role!=='admin');
-  reminders();stats();selBar();
+  const pct=(ld.m+ld.f+ld.d)/3*100;
+  $('topbar').classList.toggle('hide',pct>=100);$('tbi').style.width=Math.max(pct,8)+'%';
+  if(pct<100){$('stats').innerHTML='';$('rem').classList.add('hide');$('chips').innerHTML='';$('ttl').textContent='⏳ Data load ho raha hai... '+Math.round(pct)+'%';$('acts').innerHTML='';$('grid').innerHTML='<div class="card sk"></div>'.repeat(8);return}
+  if(!drvTried){drvTried=true;loadDrive()}
+  reminders();stats();drvRender();selBar();
   $('chips').innerHTML=`<button class="chip ${view==='fav'?'on':''}" onclick="setView('fav')">⭐ Favorites</button><button class="chip ${view==='exp'?'on':''}" onclick="setView('exp')">⏰ Expiry</button>`
     +members.map(m=>`<button class="chip ${!view&&m.id===cm?'on':''}" onclick="cm='${m.id}';cf=null;view=null;$('q').value='';render()">👤 ${esc(m.name)}</button>`).join('')
     +`<button class="chip add" onclick="addMember()">＋ Member</button>`;
@@ -336,7 +373,7 @@ async function renMember(){
   const m=members.find(x=>x.id===cm),n=prompt('Member ka naya naam:',m.name);if(!n||!n.trim()||n.trim()===m.name)return;
   try{await db.collection('members').doc(cm).update({name:n.trim()});toast('Member ka naam badal gaya ✅')}catch(e){toast(e.message)}
 }
-async function removeFiles(list){for(const d of list){try{await api('delete',{id:d.driveId})}catch(e){}await db.collection('docs').doc(d.id).delete()}}
+async function removeFiles(list){let i=0;for(const d of list){if(list.length>1)prog('🗑 Delete ho raha hai',i/list.length*100,(i+1)+'/'+list.length+' files');i++;try{await api('delete',{id:d.driveId})}catch(e){}await db.collection('docs').doc(d.id).delete()}progEnd();loadDrive()}
 async function delFolder(){
   const f=folders.find(x=>x.id===cf);if(!confirm(`"${f.name}" folder aur uski sabhi files delete karni hain?`))return;
   await removeFiles(docs.filter(d=>d.folderId===cf));try{await api('trashFolder',{memberName:members.find(x=>x.id===cm).name,folderName:f.name})}catch(e){}await db.collection('folders').doc(cf).delete();cf=null;
@@ -355,11 +392,18 @@ function driveHint(u){
   if(u.includes('googleusercontent.com'))return 'DRIVE_URL galat hai: ye temporary echo link hai. script.google.com/macros/s/.../exec wala link chahiye';
   return '';
 }
-async function api(action,p={}){
+// fetch use hota hai (XHR upload listener se CORS preflight lagta hai jo Apps Script ko pasand nahi), isliye upload % andaza hai
+async function post(body,onUp){
+  let tm=null;
+  if(onUp){const t0=Date.now(),tau=Math.max(2,body.length/250000);onUp(0);tm=setInterval(()=>onUp(Math.min(.97,1-Math.exp(-(Date.now()-t0)/1000/tau))),200)}
+  try{const r=await fetch(DRIVE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body});return await r.text()}
+  finally{if(tm)clearInterval(tm)}
+}
+async function api(action,p={},cb={}){
   const h=driveHint(DRIVE_URL);if(h)throw new Error(h);
   const idToken=await auth.currentUser.getIdToken();
   let t;
-  try{const r=await fetch(DRIVE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,idToken,...p})});t=await r.text()}
+  try{t=await post(JSON.stringify({action,idToken,...p}),cb.up)}
   catch(e){throw new Error('Drive server tak nahi pahunch paaye (link ya internet check karo)')}
   let j;try{j=JSON.parse(t)}catch(e){throw new Error('Drive backend ne galat jawab diya. Apps Script me "Who has access: Anyone" aur naya version deploy check karo')}
   if(!j.ok)throw new Error(/Unknown action/.test(j.error||'')?'Code.gs purana hai. Naya Code.gs paste karke New version deploy karo':(j.error||'Drive error'));
@@ -372,26 +416,29 @@ async function shrink(f){
     const c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);
     return await new Promise(res=>c.toBlob(b=>res(b||f),'image/jpeg',0.85));}catch(e){return f}
 }
-async function put(file,name,memberId,folderId,folderName,expiry){
+async function put(file,name,memberId,folderId,folderName,expiry,onP){
   const m=members.find(x=>x.id===memberId),fo=folders.find(x=>x.id===folderId);
   const blob=await shrink(file);
   if(blob!==file)name=name.replace(/\.[a-z0-9]+$/i,'')+'.jpg';
   if(blob.size>12*1048576)throw new Error('File 12 MB se badi hai');
   const mime=blob.type||file.type||'application/octet-stream';
-  const r=await api('upload',{memberName:m.name,folderName:folderName||fo.name,name,mime,data:await b64(blob)});
+  onP&&onP(0.05);const r=await api('upload',{memberName:m.name,folderName:folderName||fo.name,name,mime,data:await b64(blob)},{up:f=>onP&&onP(0.05+f*0.9)});onP&&onP(0.97);
   await db.collection('docs').add({memberId,folderId,name,driveId:r.id,mime,size:blob.size,expiry:expiry||null,by:me.name||me.username||'User',createdAt:Date.now()});
 }
 
 // ---- upload (file / camera / drag & drop) ----
 async function upList(files,cam){
+  const n=files.length;
   try{
-    for(const f of files){
-      let nm=f.name;
+    for(let i=0;i<n;i++){
+      const f=files[i];let nm=f.name;
       if(cam){const b=prompt('Is photo ka naam likho:','Photo');nm=(b&&b.trim()?b.trim():'Photo')+ext(f)}
-      toast('Upload ho raha hai: '+nm,0);await put(f,nm,cm,cf);
+      const lab='⬆ '+nm+(n>1?` (${i+1}/${n})`:'');
+      prog(lab,i/n*100,'Taiyaar ho raha hai...');
+      await put(f,nm,cm,cf,undefined,undefined,x=>prog(lab,(i+x)/n*100,x<.9?'Upload ho raha hai...':'Drive me save ho raha hai...'));
     }
-    toast('Upload ho gaya ✅');
-  }catch(e){toast(e.message)}
+    progEnd();toast('Upload ho gaya ✅');loadDrive();
+  }catch(e){progEnd();toast(e.message)}
 }
 function upFile(cam){
   const i=document.createElement('input');i.type='file';
@@ -428,12 +475,12 @@ async function saveTpl(k){
   const t=TPL.find(x=>x.k===k),ex=$('tx').value||null,keys=Object.keys(slotF),mid=cm;
   if(!keys.length){toast('Kam se kam ek photo chuno');return}
   try{
-    closeM();toast('Save ho raha hai...',0);
+    closeM();prog('Save ho raha hai...',0);
     const f=folders.find(x=>x.memberId===mid&&x.name.toLowerCase()===t.folder.toLowerCase());
     const fid=f?f.id:(await db.collection('folders').add({memberId:mid,name:t.folder,createdAt:Date.now()})).id,fname=f?f.name:t.folder;
-    for(const i of keys){const file=slotF[i];await put(file,t.slots[i]+ext(file),mid,fid,fname,ex)}
-    cf=fid;toast(t.folder+' save ho gaya ✅');render();
-  }catch(e){toast(e.message)}
+    for(let j=0;j<keys.length;j++){const i=keys[j],file=slotF[i],lab='⬆ '+t.slots[i]+' ('+(j+1)+'/'+keys.length+')';await put(file,t.slots[i]+ext(file),mid,fid,fname,ex,x=>prog(lab,(j+x)/keys.length*100,x<.9?'Upload ho raha hai...':'Drive me save ho raha hai...'))}progEnd();
+    cf=fid;toast(t.folder+' save ho gaya ✅');render();loadDrive();
+  }catch(e){progEnd();toast(e.message)}
 }
 
 // ---- rename / edit / move / delete ----
@@ -480,35 +527,35 @@ async function delDoc(id){
 
 // ---- preview / download / share (Drive se) ----
 const cache={};
-async function fileBlob(d){
+async function fileBlob(d,onD){
   if(cache[d.id])return cache[d.id];
-  const r=await api('get',{id:d.driveId}),bin=atob(r.data),u=new Uint8Array(bin.length);
+  const r=await api('get',{id:d.driveId},{down:onD}),bin=atob(r.data),u=new Uint8Array(bin.length);
   for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
   return cache[d.id]=new Blob([u],{type:d.mime});
 }
 async function openDoc(id){
   const d=docs.find(x=>x.id===id);
   modal(`<div class="h"><b>${esc(d.name)}</b><button onclick="share('${id}')">📲 WhatsApp</button><button class="g" onclick="dl('${id}')">⬇ Download</button><button class="g" onclick="closeM()">✕</button></div>
-  <div class="pv" id="pv">Drive se load ho raha hai...</div>
+  <div class="pv" id="pv"><div class="ld"><div class="sp"></div><div id="lt">Drive se load ho raha hai...</div><div class="pbar"><i id="lb" class="ind"></i></div></div></div>
   <div style="padding:10px;color:var(--mu);font-size:13px">Upload: ${esc(d.by||'')} · ${size(d.size)}${d.expiry?' · Expiry: '+esc(d.expiry):''}${d.note?' · 📝 '+esc(d.note):''}</div>`);
   try{
-    const u=URL.createObjectURL(await fileBlob(d));
+    const u=URL.createObjectURL(await fileBlob(d,f=>{const b=$('lb');if(b&&f!=null){b.classList.remove('ind');b.style.width=Math.round(f*100)+'%';$('lt').textContent='Load ho raha hai '+Math.round(f*100)+'%'}}));
     $('pv').innerHTML=d.mime.startsWith('image/')?`<img src="${u}" onclick="this.classList.toggle('z')" title="Zoom ke liye dabao">`:d.mime==='application/pdf'?`<iframe src="${u}"></iframe>`:`<div class="empty">Is file ka preview nahi ho sakta.<br>Download karke kholo.</div>`;
   }catch(e){$('pv').textContent='Error: '+e.message}
 }
 async function dl(id,quiet){
   const d=docs.find(x=>x.id===id);
-  try{if(!quiet)toast('Download ho raha hai...',0);const b=await fileBlob(d),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=d.name;a.click();if(!quiet)toast('Download ho gaya ✅')}
-  catch(e){toast(e.message)}
+  try{if(!quiet)prog('⬇ '+d.name,null,'Drive se aa raha hai...');const b=await fileBlob(d,f=>{if(!quiet&&f!=null)prog('⬇ '+d.name,f*100,'Download ho raha hai...')}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=d.name;a.click();if(!quiet){progEnd();toast('Download ho gaya ✅')}}
+  catch(e){progEnd();toast(e.message)}
 }
 async function share(id){
   const d=docs.find(x=>x.id===id);
   try{
-    toast('Taiyaar ho raha hai...',0);
-    const b=await fileBlob(d),f=new File([b],d.name,{type:d.mime});
-    $('toast').classList.add('hide');
+    prog('📲 '+d.name,null,'Drive se aa raha hai...');
+    const b=await fileBlob(d,f=>{if(f!=null)prog('📲 '+d.name,f*100,'Taiyaar ho raha hai...')}),f=new File([b],d.name,{type:d.mime});
+    progEnd();
     if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]});return}
-  }catch(e){if(e.name!=='AbortError')toast(e.message);return}
+  }catch(e){progEnd();if(e.name!=='AbortError')toast(e.message);return}
   await dl(id);window.open('https://wa.me/?text='+encodeURIComponent(d.name),'_blank');
   toast('File download ho gayi, WhatsApp me attach karke bhejo',5000);
 }
@@ -522,17 +569,17 @@ function selAll(){document.querySelectorAll('.ck').forEach(c=>{sel.add(c.dataset
 async function bulkDl(){const ds=selDocs();for(const d of ds)await dl(d.id,true);toast(ds.length+' files download ho gayi ✅')}
 async function bulkDel(){
   const ds=selDocs();if(!ds.length||!confirm(`${ds.length} files delete karni hain? Drive se bhi hat jayengi.`))return;
-  toast('Delete ho raha hai...',0);await removeFiles(ds);sel.clear();toast('Delete ho gayi ✅');render();
+  await removeFiles(ds);sel.clear();toast('Delete ho gayi ✅');render();
 }
 async function shareSel(){
   const ds=selDocs();
   if(!ds.length)return;
   try{
-    toast(`Taiyaar ho raha hai (${ds.length} files)...`,0);
-    const fs=[];for(const d of ds)fs.push(new File([await fileBlob(d)],d.name,{type:d.mime}));
-    $('toast').classList.add('hide');
+    prog('📲 Files taiyaar ho rahi hain',0,'0/'+ds.length);
+    const fs=[];for(let i=0;i<ds.length;i++){const d=ds[i];prog('📲 Files taiyaar ho rahi hain',i/ds.length*100,(i+1)+'/'+ds.length+' load ho rahi hai...');fs.push(new File([await fileBlob(d)],d.name,{type:d.mime}))}
+    progEnd();
     if(navigator.canShare&&navigator.canShare({files:fs})){await navigator.share({files:fs});return}
-  }catch(e){if(e.name!=='AbortError')toast(e.message);return}
+  }catch(e){progEnd();if(e.name!=='AbortError')toast(e.message);return}
   for(const d of ds)await dl(d.id,true);
   window.open('https://wa.me/?text='+encodeURIComponent(ds.map(d=>d.name).join(', ')),'_blank');
   toast('Files download ho gayi, WhatsApp me attach karke bhejo',5000);
